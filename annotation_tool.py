@@ -54,11 +54,10 @@ class MainWindow():
         self.set_image()
     def init_shortcuts(self):
         self.main.focus_set()
-        self.main.bind('<Key-Right>', self.onNextButton)
-        self.main.bind('<Key-Left>', self.onBackButton)
+        self.main.bind('<Return>', self.onNextButton)
+        self.main.bind('<space>', self.onBackButton)
     def set_message(self):
-        self.message_image_index.set("{}/{}".format(str(self.current_image_num+1),str(self.images_num)))
-        self.message_image_class.set("{}".format(self.get_class_name(self.images_list[self.current_image_num])))
+        self.label_image_name["text"] = self.images_list[self.current_image_num]
     def set_image(self,e=None):
         img = Image.open(os.path.join(self.images_dir,self.images_list[self.current_image_num]))
         img = img.resize((self.image_width,self.image_height), Image.LANCZOS)
