@@ -7,7 +7,6 @@ import json
 # 設定項目
 images_dir = ".\\images" # 画像フォルダのパス
 json_path = ".\\result.json" # 出力(json)ファイルのパス
-classes = ["犬","猫","鳥","猿","羊","狼","狸","不明"] # 分類するクラス
 image_width = 257 * 2  # 表示画像の幅
 image_height = 61 * 2  # 表示画像の高さ
 
@@ -18,7 +17,6 @@ class MainWindow():
         self.main = main
         self.images_dir = args["images_dir"]
         self.json_path = args["json_path"]
-        self.classes = args["classes"]
         self.image_width = args["width"]
         self.image_height = args["height"]
         self.images_list = os.listdir(self.images_dir)
@@ -78,13 +76,6 @@ class MainWindow():
         self.img = ImageTk.PhotoImage(img)
         self.canvas.itemconfig(self.image_on_canvas, image=self.img)
 
-    def get_class_name(self, img_path):
-        data = self.load_json()
-        if img_path in data:
-            return self.classes[data[img_path]]
-        else:
-            return "No Label"
-
     def onNextButton(self, e=None):
         # 一つ進む
         self.current_image_num += 1
@@ -133,7 +124,6 @@ def main():
     root = tkinter.Tk()
     args = {"images_dir": images_dir,
             "json_path": json_path,
-            "classes": classes,
             "width": image_width,
             "height": image_height,
             }
