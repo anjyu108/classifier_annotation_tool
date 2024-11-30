@@ -37,9 +37,10 @@ class MainWindow():
                                      height=self.image_height)
 
         # 画像名を表示する
-        self.image_name = tkinter.Label(self.main,
-                                              text=self.images_list[self.current_image_num],
-                                              font=('Times', 12))
+        self.image_name = tkinter.Label(
+            self.main,
+            text=self.images_list[self.current_image_num],
+            font=('Times', 12))
         self.image_name.grid(row=0, columnspan=7)
 
         self.canvas.grid(row=1, column=0, columnspan=7, rowspan=1)
