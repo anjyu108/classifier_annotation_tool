@@ -22,7 +22,6 @@ class MainWindow():
         self.images_list = os.listdir(self.images_dir)
         self.images_num = len(self.images_list)
         self.img = []
-        self.kyboard_str = "123456789qwertyuiopasdfghjklzxcvbnm"
         self.init_window()
         self.init_shortcuts()
 
@@ -53,21 +52,22 @@ class MainWindow():
                                                         image=self.img)
 
         # ショートカットの説明
-        self.image_name = tkinter.Label(
+        self.shortcut_label = tkinter.Label(
             self.main,
-            text="next: Enter | back: Space",
+            text="next: Enter | back: Ctr-Enter",
             font=('Times', 8))
-        self.image_name.grid(row=3)
+        self.shortcut_label.grid(row=3)
 
         self.set_image()
 
     def init_shortcuts(self):
-        self.main.focus_set()
+        self.move_text.focus_force()
         self.main.bind('<Return>', self.onNextButton)
-        self.main.bind('<space>', self.onBackButton)
+        self.main.bind('<Control-Return>', self.onBackButton)
 
     def set_message(self):
         self.image_name["text"] = self.images_list[self.current_image_num]
+        print(self.images_list[self.current_image_num])
 
     def set_image(self, e=None):
         img = Image.open(os.path.join(self.images_dir,
@@ -77,6 +77,8 @@ class MainWindow():
         self.canvas.itemconfig(self.image_on_canvas, image=self.img)
 
     def onNextButton(self, e=None):
+        self.labeling(self.current_image_num, self.move_text.get())
+
         # 一つ進む
         self.current_image_num += 1
         # 最初の画像に戻る
@@ -96,12 +98,8 @@ class MainWindow():
         self.set_image()
         self.set_message()
 
-    def labeling(self, class_num):
-        def x(e=None):
-            img_path = self.images_list[self.current_image_num]
-            self.update_json(img_path, class_num)
-            self.set_message()
-        return x
+    def labeling(self, current_image_num, label_text):
+        self.update_json(self.images_list[current_image_num], label_text)
 
     def load_json(self):
         data = {}
@@ -114,9 +112,10 @@ class MainWindow():
                 pass
         return data
 
-    def update_json(self, img_path, class_num):
+    def update_json(self, img_path, label_text):
         data = self.load_json()
-        data[img_path] = class_num
+        data[img_path] = label_text
+        print(data)
         json.dump(data, open(self.json_path, 'w'), indent=4)
 
 
