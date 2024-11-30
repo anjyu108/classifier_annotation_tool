@@ -46,13 +46,21 @@ class MainWindow():
         self.canvas.grid(row=1, column=0, columnspan=7, rowspan=1)
 
         # 書かれた指してを入力するテキストフィールド
-        self.move_text = tkinter.Entry(width=40, font=('Times', 20))
-        self.move_text.grid(row=2, column=3)
+        self.move_text = tkinter.Entry(width=20, font=('Times', 20))
+        self.move_text.grid(row=2, column=2)
 
         # 最初の画像をセット
         self.image_on_canvas = self.canvas.create_image(0, 0,
                                                         anchor=tkinter.NW,
                                                         image=self.img)
+
+        # ショートカットの説明
+        self.image_name = tkinter.Label(
+            self.main,
+            text="next: Enter | back: Space",
+            font=('Times', 8))
+        self.image_name.grid(row=3)
+
         self.set_image()
 
     def init_shortcuts(self):
