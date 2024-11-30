@@ -2,11 +2,11 @@ import tkinter
 from PIL import Image, ImageTk
 import os
 import json
+import argparse
 
 
 # 設定項目
-images_dir = ".\\images" # 画像フォルダのパス
-json_path = ".\\result.json" # 出力(json)ファイルのパス
+json_path = ".\\result.json"  # 出力(json)ファイルのパス
 image_width = 257 * 2  # 表示画像の幅
 image_height = 61 * 2  # 表示画像の高さ
 
@@ -121,8 +121,12 @@ class MainWindow():
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--images_dir', default=".\\images")
+    args = parser.parse_args()
+
     root = tkinter.Tk()
-    args = {"images_dir": images_dir,
+    args = {"images_dir": args.images_dir,
             "json_path": json_path,
             "width": image_width,
             "height": image_height,
