@@ -1,8 +1,35 @@
 import tkinter
+import tkinter as tk
+import tkinter.ttk as ttk
 from PIL import Image, ImageTk
 import os
 import json
 import argparse
+
+
+class ScrollableFrame(ttk.Frame):
+    def __init__(self, container, bar_x=True, bar_y=True):
+        super().__init__(container)
+        self.canvas = tk.Canvas(self)
+        self.scrollable_frame = ttk.Frame(self.canvas)
+        self.scrollable_frame.bind(
+            "<Configure>",
+            lambda e: self.canvas.configure(
+                scrollregion=self.canvas.bbox("all")
+            )
+        )
+        self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+        if bar_y:
+            self.scrollbar_y = ttk.Scrollbar(self, orient="vertical",
+                                             command=self.canvas.yview)
+            self.scrollbar_y.pack(side=tk.RIGHT, fill="y")
+            self.canvas.configure(yscrollcommand=self.scrollbar_y.set)
+        if bar_x:
+            self.scrollbar_x = ttk.Scrollbar(self, orient="horizontal",
+                                             command=self.canvas.xview)
+            self.scrollbar_x.pack(side=tk.BOTTOM, fill="x")
+            self.canvas.configure(xscrollcommand=self.scrollbar_x.set)
+        self.canvas.pack(side=tk.LEFT, fill="both", expand=True)
 
 
 class MainWindow():
@@ -60,8 +87,12 @@ class MainWindow():
         self.txt.grid(row=4, column=0)
         self.txt["text"] = "---------------------------------------------------------"
 
-        self.txt = tkinter.Label(self.main, bg='white', justify='left')
-        self.txt.grid(row=5, column=0)
+        frame = ScrollableFrame(self.main)
+        frame.grid(row=5)
+        self.debug_label = ttk.Label(frame.scrollable_frame,
+                                     text="debug text",
+                                     background='white')
+        self.debug_label.pack()
 
         # Init the contents
         self.update_contents()
@@ -77,7 +108,7 @@ class MainWindow():
         self.set_move_text()
 
         # print annotation result for debug
-        self.txt["text"] = json.dumps(self.annotation_result, indent=4)
+        self.debug_label["text"] = json.dumps(self.annotation_result, indent=4)
 
     def set_message(self):
         self.image_name["text"] = self.images_list[self.current_image_num]
