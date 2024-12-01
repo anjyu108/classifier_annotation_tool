@@ -5,12 +5,6 @@ import json
 import argparse
 
 
-# 設定項目
-json_path = ".\\result.json"  # 出力(json)ファイルのパス
-image_width = 257 * 2  # 表示画像の幅
-image_height = 61 * 2  # 表示画像の高さ
-
-
 class MainWindow():
     def __init__(self, main, args):
         self.current_image_num = 0
@@ -122,13 +116,16 @@ class MainWindow():
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--images_dir', default=".\\images")
+    parser.add_argument('-o', '--output_json', default=".\\result.json")
+    parser.add_argument('--width_image', type=int, default=257 * 2)
+    parser.add_argument('--height_image', type=int, default=61 * 2)
     args = parser.parse_args()
 
     root = tkinter.Tk()
     args = {"images_dir": args.images_dir,
-            "json_path": json_path,
-            "width": image_width,
-            "height": image_height,
+            "json_path": args.output_json,
+            "width": args.width_image,
+            "height": args.height_image,
             }
     MainWindow(root, args)
     root.mainloop()
