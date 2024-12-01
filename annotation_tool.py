@@ -22,26 +22,25 @@ class MainWindow():
 
     def init_window(self):
         # タイトルの設定
-        self.main.title(u"アノテーションツール")
-
-        # 画像を表示するキャンバスを作る
-        self.canvas = tkinter.Canvas(self.main, width=self.image_width,
-                                     height=self.image_height)
+        self.main.title("yasux annotation tool")
 
         # 画像名を表示する
         self.image_name = tkinter.Label(
             self.main,
             text=self.images_list[self.current_image_num],
             font=('Times', 12))
-        self.image_name.grid(row=0, columnspan=7)
+        self.image_name.grid(row=0)
 
-        self.canvas.grid(row=1, column=0, columnspan=7, rowspan=1)
+        # 画像を表示するキャンバスを作る
+        self.canvas = tkinter.Canvas(self.main, width=self.image_width,
+                                     height=self.image_height)
+        self.canvas.grid(row=1, column=0, rowspan=1)
 
         # 書かれた指し手を入力するテキストフィールド
         self.move_text_value = tkinter.StringVar()
         self.move_text = tkinter.Entry(width=20, font=('Times', 20),
                                        textvariable=self.move_text_value)
-        self.move_text.grid(row=2, column=2)
+        self.move_text.grid(row=2, column=0)
 
         # 最初の画像をセット
         self.image_on_canvas = self.canvas.create_image(0, 0,
@@ -52,8 +51,10 @@ class MainWindow():
         self.shortcut_label = tkinter.Label(
             self.main,
             text="next: Enter | back: Ctr-Enter(label not saved)",
-            font=('Times', 8))
-        self.shortcut_label.grid(row=3)
+            font=('Times', 8),
+            justify="left"
+            )
+        self.shortcut_label.grid(row=3, column=0)
 
         # Init the contents
         self.update_contents()
@@ -81,7 +82,6 @@ class MainWindow():
     def set_move_text(self):
         image_name = self.images_list[self.current_image_num]
         saved_label = self.annotation_result.get(image_name, "")
-        print(image_name, saved_label)
         self.move_text_value.set(saved_label)
 
     def onNextButton(self, e=None):
