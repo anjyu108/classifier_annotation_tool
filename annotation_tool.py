@@ -60,7 +60,7 @@ class MainWindow():
         self.txt.grid(row=4, column=0)
         self.txt["text"] = "---------------------------------------------------------"
 
-        self.txt = tkinter.Label(self.main)
+        self.txt = tkinter.Label(self.main, bg='white', justify='left')
         self.txt.grid(row=5, column=0)
 
         # Init the contents
