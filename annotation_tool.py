@@ -16,6 +16,7 @@ class MainWindow():
         self.images_list = os.listdir(self.images_dir)
         self.images_num = len(self.images_list)
         self.img = []
+        self.annotation_result = self.load_json()
         self.init_window()
         self.init_shortcuts()
 
@@ -36,8 +37,10 @@ class MainWindow():
 
         self.canvas.grid(row=1, column=0, columnspan=7, rowspan=1)
 
-        # 書かれた指してを入力するテキストフィールド
-        self.move_text = tkinter.Entry(width=20, font=('Times', 20))
+        # 書かれた指し手を入力するテキストフィールド
+        self.move_text_value = tkinter.StringVar()
+        self.move_text = tkinter.Entry(width=20, font=('Times', 20),
+                                       textvariable=self.move_text_value)
         self.move_text.grid(row=2, column=2)
 
         # 最初の画像をセット
@@ -48,20 +51,25 @@ class MainWindow():
         # ショートカットの説明
         self.shortcut_label = tkinter.Label(
             self.main,
-            text="next: Enter | back: Ctr-Enter",
+            text="next: Enter | back: Ctr-Enter(label not saved)",
             font=('Times', 8))
         self.shortcut_label.grid(row=3)
 
-        self.set_image()
+        # Init the contents
+        self.update_contents()
 
     def init_shortcuts(self):
         self.move_text.focus_force()
         self.main.bind('<Return>', self.onNextButton)
         self.main.bind('<Control-Return>', self.onBackButton)
 
+    def update_contents(self):
+        self.set_image()
+        self.set_message()
+        self.set_move_text()
+
     def set_message(self):
         self.image_name["text"] = self.images_list[self.current_image_num]
-        print(self.images_list[self.current_image_num])
 
     def set_image(self, e=None):
         img = Image.open(os.path.join(self.images_dir,
@@ -70,27 +78,27 @@ class MainWindow():
         self.img = ImageTk.PhotoImage(img)
         self.canvas.itemconfig(self.image_on_canvas, image=self.img)
 
+    def set_move_text(self):
+        image_name = self.images_list[self.current_image_num]
+        saved_label = self.annotation_result.get(image_name, "")
+        print(image_name, saved_label)
+        self.move_text_value.set(saved_label)
+
     def onNextButton(self, e=None):
         self.labeling(self.current_image_num, self.move_text.get())
 
-        # 一つ進む
         self.current_image_num += 1
-        # 最初の画像に戻る
         if self.current_image_num == self.images_num:
             self.current_image_num = 0
-        # 表示画像を更新
-        self.set_image()
-        self.set_message()
+
+        self.update_contents()
 
     def onBackButton(self, e=None):
-        # 一つ戻る
         self.current_image_num -= 1
-        # 最後の画像へ
         if self.current_image_num == -1:
             self.current_image_num = self.images_num - 1
-        # 表示画像を更新
-        self.set_image()
-        self.set_message()
+
+        self.update_contents()
 
     def labeling(self, current_image_num, label_text):
         self.update_json(self.images_list[current_image_num], label_text)
@@ -107,10 +115,9 @@ class MainWindow():
         return data
 
     def update_json(self, img_path, label_text):
-        data = self.load_json()
-        data[img_path] = label_text
-        print(data)
-        json.dump(data, open(self.json_path, 'w'), indent=4)
+        self.annotation_result[img_path] = label_text
+        with open(self.json_path, 'w') as f:
+            json.dump(self.annotation_result, f, indent=4)
 
 
 def main():
