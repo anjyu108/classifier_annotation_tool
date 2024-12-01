@@ -77,7 +77,9 @@ class MainWindow():
         # ショートカットの説明
         self.shortcut_label = tkinter.Label(
             self.main,
-            text="next: Enter | back: Ctr-Enter(label not saved)",
+            text="next: Enter | " +
+                 "back: Ctr-Enter(label not saved) | " +
+                 "Unknown case: ZZZ",
             font=('Times', 8),
             )
         self.shortcut_label.grid(row=3, column=0)
@@ -87,8 +89,14 @@ class MainWindow():
         self.txt.grid(row=4, column=0)
         self.txt["text"] = "---------------------------------------------------------"
 
+        self.shortcut_label = tkinter.Label(
+            self.main,
+            text="[Debug Info] json text dump",
+            )
+        self.shortcut_label.grid(row=5, column=0)
+
         frame = ScrollableFrame(self.main)
-        frame.grid(row=5)
+        frame.grid(row=6)
         self.debug_label = ttk.Label(frame.scrollable_frame,
                                      text="debug text",
                                      background='white')
