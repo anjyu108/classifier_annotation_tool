@@ -52,9 +52,16 @@ class MainWindow():
             self.main,
             text="next: Enter | back: Ctr-Enter(label not saved)",
             font=('Times', 8),
-            justify="left"
             )
         self.shortcut_label.grid(row=3, column=0)
+
+        # TODO: fix this tentative separator
+        self.txt = tkinter.Label(self.main)
+        self.txt.grid(row=4, column=0)
+        self.txt["text"] = "---------------------------------------------------------"
+
+        self.txt = tkinter.Label(self.main)
+        self.txt.grid(row=5, column=0)
 
         # Init the contents
         self.update_contents()
@@ -68,6 +75,9 @@ class MainWindow():
         self.set_image()
         self.set_message()
         self.set_move_text()
+
+        # print annotation result for debug
+        self.txt["text"] = json.dumps(self.annotation_result, indent=4)
 
     def set_message(self):
         self.image_name["text"] = self.images_list[self.current_image_num]
